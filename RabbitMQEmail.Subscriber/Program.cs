@@ -50,9 +50,12 @@ async void SendMail(string message)
 
     var email = new MimeMessage();
     email.From.Add(MailboxAddress.Parse(configuration.GetSection("Email:FromMail").Value!));
-    email.To.Add(MailboxAddress.Parse(emailDto.To));
-    if (!string.IsNullOrEmpty(emailDto.CC))
-        email.Cc.Add(MailboxAddress.Parse(emailDto.CC));
+    foreach (var currentEmailTo in emailDto.To)
+        email.To.Add(MailboxAddress.Parse(currentEmailTo));
+
+    foreach (var currentEmailCc in emailDto.CC)
+        email.Cc.Add(MailboxAddress.Parse(currentEmailCc));
+
     email.Subject = emailDto.Subject;
     email.Body = new TextPart(TextFormat.Html) { Text = emailDto.Body };
 
